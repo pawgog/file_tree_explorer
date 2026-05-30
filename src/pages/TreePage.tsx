@@ -1,7 +1,20 @@
 import { Link } from "react-router";
 import { ArrowLeft } from "lucide-react";
 
+import TreeNode from "../components/TreeNode";
+import Search from "../components/Search";
+import NoData from "../components/NoData";
+
+import { useTree } from "../context/useTree";
+import type { Node } from "../type";
+
 export default function TreePage() {
+  const { tree } = useTree();
+
+  if (!tree || (Array.isArray(tree) && tree.length === 0)) {
+    return <NoData />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
@@ -26,6 +39,12 @@ export default function TreePage() {
           <p className="text-sm text-gray-500 mt-1">
             Manage your JSON file structure with ease
           </p>
+        </div>
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 min-h-100">
+          <Search />
+          <div className="mt-6 overflow-x-auto">
+            <TreeNode node={tree as unknown as Node} level={0} path="" />
+          </div>
         </div>
       </div>
     </div>
