@@ -4,6 +4,7 @@ import { FileText, SearchIcon } from "lucide-react";
 
 import NoData from "./NoData";
 import { useTree } from "../context/useTree";
+import { searchTree } from "../utils";
 
 export default function Search() {
   const [query, setQuery] = useState("");
@@ -19,7 +20,7 @@ export default function Search() {
   const handleSearch = (query: string) => {
     setQuery(query);
     if (!tree) return;
-    // search tree function
+    setResults(searchTree(tree, query));
   };
 
   return (
