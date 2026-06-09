@@ -1,10 +1,31 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
+
+import { useTree } from "../context/useTree";
+
 export default function HomePage() {
+  const [json, setJson] = useState(() => {
+    const savedData = localStorage.getItem("treeData");
+    return savedData ? savedData : "";
+  });
+  const { tree, saveTree, clearTree } = useTree();
+  const navigate = useNavigate();
+
   const handleInputChange = (value: string) => {
-    console.log("handleInputChange", value);
+    setJson(value);
+    localStorage.setItem("treeData", value);
   };
 
   const handleLoad = () => {
-    console.log("handleLoad");
+    try {
+      const parsed = JSON.parse(json);
+      saveTree(parsed);
+      navigate("/tree");
+    } catch (error) {
+      alert(
+        `Invalid JSON format: ${error instanceof Error ? error.message : "Check syntax"}`,
+      );
+    }
   };
 
   return (
@@ -38,12 +59,14 @@ export default function HomePage() {
             rows={8}
             className="w-full p-4 font-mono text-[13px] text-gray-700 bg-gray-50/50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all outline-none resize-none"
             placeholder='{ "name": "root", ... }'
+            value={json}
             onChange={(e) => handleInputChange(e.target.value)}
           />
         </div>
         <div className="flex gap-3 mt-6">
           <button
             onClick={handleLoad}
+            disabled={!json.trim()}
             className="flex-2 py-3 px-6 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 text-white font-medium rounded-xl transition-all active:scale-[0.98] shadow-md shadow-green-100 flex items-center justify-center gap-2 group"
           >
             Load Tree
@@ -61,6 +84,17 @@ export default function HomePage() {
               />
             </svg>
           </button>
+          {(tree || json) && (
+            <button
+              onClick={() => {
+                clearTree();
+                setJson("");
+              }}
+              className="flex-1 py-3 px-4 bg-gray-100 text-gray-500 font-medium rounded-xl hover:bg-red-50 hover:text-red-600 transition-colors border border-transparent hover:border-red-100"
+            >
+              Clear
+            </button>
+          )}
         </div>
       </div>
     </div>
