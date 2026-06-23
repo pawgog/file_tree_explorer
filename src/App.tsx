@@ -4,14 +4,18 @@ import HomePage from "./pages/HomePage";
 import TreePage from "./pages/TreePage";
 import NodeDetailsPage from "./pages/NodeDetailsPage";
 
+import { TreeProvider } from "./context/ThreeProvider";
+
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/tree" element={<TreePage />} />
-        <Route path="/tree/:nodePath" element={<NodeDetailsPage />} />
-      </Routes>
-    </BrowserRouter>
+    <TreeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/tree" element={<TreePage />} />
+          <Route path="/tree/:nodePath" element={<NodeDetailsPage />} />
+        </Routes>
+      </BrowserRouter>
+    </TreeProvider>
   );
 }
