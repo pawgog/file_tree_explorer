@@ -4,7 +4,7 @@ import HomePage from "./pages/HomePage";
 import TreePage from "./pages/TreePage";
 import NodeDetailsPage from "./pages/NodeDetailsPage";
 
-import { TreeProvider } from "./context/ThreeProvider";
+import { TreeProvider } from "./context/TreeProvider";
 
 export default function App() {
   return (

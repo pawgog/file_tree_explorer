@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
 
-import { TreeContext } from "./ThreeContext";
+import { TreeContext } from "./TreeContext";
 import type { Node } from "../type";
 
 export const TreeProvider = ({ children }: { children: React.ReactNode }) => {
