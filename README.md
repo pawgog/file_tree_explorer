@@ -1,73 +1,25 @@
-# React + TypeScript + Vite
+# FileTree Explorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Typescript + Vite + Tailwind
 
-Currently, two official plugins are available:
+## Architectural Decisions
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **State Management (Context API + Custom Hooks)**: Chosen Context API over Redux for its simplicity in handling a single, coherent tree object. The useTree hook implements the Guard Pattern, ensuring secure data access and cleaner component syntax.
+- **Data Structure**: The TreeNode component is designed recursively, allowing the application to render deeply nested structures with minimal and maintainable code.
+- **Search Engine**: Fast file and folder filtering by name/path.
+- **Lazy Initialization**: Implemented within useState to ensure that localStorage access and JSON.parse operations run only once during the initial mount, significantly optimizing startup performance.
+- **Styling**: Added Tailwind CSS solely for the quick development of a responsive interface with advanced state.
+- **Routing (React Router)**: Implemented utility parameters (:nodePath) allow for direct linking of files and folders and support for the "Back" button in the application.
 
-## React Compiler
+## Future Roadmap
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **List Virtualization**: For trees with significant thousands, rendering all DOM elements would reduce performance. I would use the react-window or react-virtuoso libraries.
+- **Drag & Drop**: Implementing file and folder dragging, e.g. using dnd-kit to provide an interactive tree structure.
+- **File Upload Support**: Adding support for .json file uploads via the File API, instead of just copy-pasting code.
+- **Automated Tests**: Implementing unit tests (Vitest/Jest), e.g. for the findNode logic, and E2E tests for the JSON import process.
 
-## Expanding the ESLint configuration
+## Known Limitation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Key Uniqueness**: The current logic relies on node.name as the key. If two elements with the same name are in the same folder, React may experience rendering errors. Unique IDs or full paths are required.
+- **LocalStorage Limits**: The localStorage limit is approximately 5 MB. With very large, complex JSON structures, writing may be impossible. Switching to IndexedDB or an external API is a solution.
+- **No Memory Optimization**: All data is protected in the application state. With very large structures, memory distribution and rendering performance are compromised.
